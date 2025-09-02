@@ -45,11 +45,21 @@ class LoginSerializer(serializers.Serializer):
         username = instance.get('username')
         password = instance.get('password')
         captcha = instance.get('captcha')
-        captcha_cache = cache.get(Cache_Version.CAPTCHA.get_key(captcha=captcha.lower()),
-                                  version=Cache_Version.CAPTCHA.get_version())
-        if captcha_cache is None:
-            raise AppApiException(1005, _("Captcha code error or expiration"))
-        user = QuerySet(User).filter(username=username, password=password_encrypt(password)).first()
+        sms_code = instance.get('sms_code')
+
+        if captcha:
+            captcha_cache = cache.get(Cache_Version.CAPTCHA.get_key(captcha=captcha.lower()),
+                                      version=Cache_Version.CAPTCHA.get_version())
+            if captcha_cache is None:
+                raise AppApiException(1005, _("Captcha code error or expiration"))
+
+        if password:
+            user = QuerySet(User).filter(username=username, password=password_encrypt(password)).first()
+        elif sms_code:
+            # TODO 校验短信验证码
+            user = QuerySet(User).filter(phone=username).first()
+        else:
+            raise AppApiException(1005, _("Please enter the password or SMS verification code"))
         if user is None:
             raise AppApiException(500, _('The username or password is incorrect'))
         if not user.is_active:

@@ -11,6 +11,7 @@ import uuid_utils.compat as uuid
 from django.db import models
 
 from common.utils.common import password_encrypt
+from modules.models import Company
 
 
 class User(models.Model):
@@ -22,6 +23,10 @@ class User(models.Model):
     password = models.CharField(max_length=150, verbose_name="密码")
     role = models.CharField(max_length=150, verbose_name="角色")
     source = models.CharField(max_length=10, verbose_name="来源", default="LOCAL", db_index=True)
+    avatar = models.CharField(max_length=150, null=True, blank=True, default=None, verbose_name="头像")
+    gender = models.SmallIntegerField(default=0, verbose_name="性别:0=未知,1=男,2=女")
+    score = models.IntegerField(default=0, verbose_name="积分")
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='users', null=True, verbose_name="关联企业")
     is_active = models.BooleanField(default=True, db_index=True)
     language = models.CharField(max_length=10, verbose_name="语言", null=True, default=None)
     create_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True, null=True, db_index=True)

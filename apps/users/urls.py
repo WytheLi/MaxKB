@@ -5,6 +5,8 @@ from . import views
 app_name = "user"
 # @formatter:off
 urlpatterns = [
+    path('send_sms/', views.SendSMSAPIView.as_view(), name='send_sms'),
+    path('user/register/', views.UserRegisterView.as_view(), name='register'),
     path('user/login', views.LoginView.as_view(), name='login'),
     path('user/profile', views.UserProfileView.as_view(), name="user_profile"),
     path('user/captcha', views.CaptchaView.as_view(), name='captcha'),

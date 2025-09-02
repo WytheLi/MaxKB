@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'models_provider',
     'django_celery_beat',
     'application',
+    'modules',
     'chat',
     'oss',
     'django_apscheduler',
@@ -193,3 +194,6 @@ edition = 'CE'
 
 if os.environ.get('MAXKB_REDIS_SENTINEL_SENTINELS') is not None:
     DJANGO_REDIS_CONNECTION_FACTORY = "django_redis.pool.SentinelConnectionFactory"
+
+# Tencent Cloud SMS
+TENCENTCLOUD_SMS_CONFIG = CONFIG.get_tencentcloud_sms_settings()

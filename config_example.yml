@@ -1,0 +1,22 @@
+# 数据库链接信息
+DB_NAME: maxkb-v2
+DB_HOST: localhost
+DB_PORT: 5432
+DB_USER: postgres
+DB_PASSWORD: xxxxxxx
+DB_ENGINE: django.db.backends.postgresql_psycopg2
+
+# Redis
+REDIS_PASSWORD: ''
+
+DEBUG: true
+
+TIME_ZONE: Asia/Shanghai
+
+# Tencent Cloud SMS
+TENCENTCLOUD_SMS_SDK_APPID: "SDK_APPID"
+TENCENTCLOUD_SMS_SECRET_ID: "AccessKeyId"
+TENCENTCLOUD_SMS_SECRET_KEY: "AccessKeySecret"
+TENCENTCLOUD_SMS_SIGN_NAME: "SignName"
+TENCENTCLOUD_SMS_TEMPLATE_CODE: "TemplateCode"
+TENCENTCLOUD_SMS_REGION: "cn-hangzhou"

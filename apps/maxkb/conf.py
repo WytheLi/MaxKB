@@ -42,7 +42,15 @@ class Config(dict):
         # 库
         'REDIS_DB': 0,
         # 最大连接数
-        'REDIS_MAX_CONNECTIONS': 100
+        'REDIS_MAX_CONNECTIONS': 100,
+
+        # Tencent Cloud SMS
+        'TENCENTCLOUD_SMS_SDK_APPID': 'sdk_appid',
+        'TENCENTCLOUD_SMS_SECRET_ID': 'AccessKeyId',
+        'TENCENTCLOUD_SMS_SECRET_KEY': 'AccessKeySecret',
+        'TENCENTCLOUD_SMS_SIGN_NAME': 'SignName',
+        'TENCENTCLOUD_SMS_TEMPLATE_CODE': 'TemplateCode',
+        'TENCENTCLOUD_SMS_REGION': 'cn-hangzhou'
     }
 
     def get_debug(self) -> bool:
@@ -50,6 +58,16 @@ class Config(dict):
 
     def get_time_zone(self) -> str:
         return self.get('TIME_ZONE') if 'TIME_ZONE' in self else 'Asia/Shanghai'
+
+    def get_tencentcloud_sms_settings(self):
+        return {
+            "SDK_APPID": self.get('TENCENTCLOUD_SMS_SDK_APPID'),
+            "SECRET_ID": self.get('TENCENTCLOUD_SMS_SECRET_ID'),
+            "SECRET_KEY": self.get('TENCENTCLOUD_SMS_SECRET_KEY'),
+            "SIGN_NAME": self.get('TENCENTCLOUD_SMS_SIGN_NAME'),
+            "TEMPLATE_CODE": self.get('TENCENTCLOUD_SMS_TEMPLATE_CODE'),
+            "REGION": self.get('TENCENTCLOUD_SMS_REGION')
+        }
 
     def get_db_setting(self) -> dict:
         return {
