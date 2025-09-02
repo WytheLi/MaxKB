@@ -67,7 +67,11 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'common.exception.handle_exception.handle_exception',
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': ['common.auth.authenticate.AnonymousAuthentication']
+    'DEFAULT_AUTHENTICATION_CLASSES': ['common.auth.authenticate.AnonymousAuthentication'],
+    # 请求限流
+    'DEFAULT_THROTTLE_RATES': {
+        'sms_send': '1/min',  # 每分钟最多发送1次
+    }
 }
 STATICFILES_DIRS = [(os.path.join(PROJECT_DIR, 'ui', 'dist'))]
 STATIC_ROOT = os.path.join(BASE_DIR.parent, 'static')

@@ -22,12 +22,14 @@ from common.exception.app_exception import AppApiException
 from common.utils.common import password_encrypt, get_random_chars
 from maxkb.const import CONFIG
 from users.models import User
+from users.utils.sms import SMSService, SMSTemplateType
 
 
 class LoginRequest(serializers.Serializer):
     username = serializers.CharField(required=True, max_length=64, help_text=_("Username"), label=_("Username"))
-    password = serializers.CharField(required=True, max_length=128, label=_("Password"))
-    captcha = serializers.CharField(required=True, max_length=64, label=_('captcha'))
+    password = serializers.CharField(required=False, max_length=128, label=_("Password"))
+    captcha = serializers.CharField(required=False, max_length=64, label=_('captcha'))
+    sms_code = serializers.CharField(required=False, max_length=6, label=_('sms_code'))
 
 
 class LoginResponse(serializers.Serializer):
@@ -56,7 +58,8 @@ class LoginSerializer(serializers.Serializer):
         if password:
             user = QuerySet(User).filter(username=username, password=password_encrypt(password)).first()
         elif sms_code:
-            # TODO 校验短信验证码
+            sms_service = SMSService()
+            sms_service.verify_code(phone_number=username, code=sms_code, template_type=SMSTemplateType.LOGIN)
             user = QuerySet(User).filter(phone=username).first()
         else:
             raise AppApiException(1005, _("Please enter the password or SMS verification code"))

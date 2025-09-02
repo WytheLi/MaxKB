@@ -1,8 +1,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from users.serializers.register import UserRegisterSerializer, SMSVerificationSerializer
-from users.utils.sms import SMSService
+from users.serializers.register import UserRegisterSerializer
 
 
 class UserRegisterView(APIView):
@@ -32,23 +31,3 @@ class UserRegisterView(APIView):
             "message": "注册失败",
             "errors": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
-
-
-class SendSMSAPIView(APIView):
-    """发送短信验证码API视图"""
-
-    def post(self, request):
-        serializer = SMSVerificationSerializer(data=request.data)
-
-        if not serializer.is_valid():
-            return Response({
-                'success': False,
-                'message': serializer.errors
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        phone_number = serializer.validated_data['phone']
-        sms_service = SMSService()
-        success, message = sms_service.send_verification_code(phone_number)
-
-        status_code = status.HTTP_200_OK if success else status.HTTP_400_BAD_REQUEST
-        return Response({'success': success, 'message': message}, status=status_code)

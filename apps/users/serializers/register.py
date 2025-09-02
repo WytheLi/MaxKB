@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from modules.models import Company
 from users.models import User
-from users.utils.sms import SMSService
+from users.utils.sms import SMSService, SMSTemplateType
 
 
 class CompanyRegisterSerializer(serializers.ModelSerializer):
@@ -44,7 +44,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         """验证密码是否匹配"""
         sms_service = SMSService()
-        success, message = sms_service.verify_code(attrs['phone'], attrs['sms_code'])
+        success, message = sms_service.verify_code(attrs['phone'], attrs['sms_code'], SMSTemplateType.REGISTER)
         if not success:
             raise serializers.ValidationError({"sms_code": message})
 
@@ -85,13 +85,3 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
-
-
-class SMSVerificationSerializer(serializers.Serializer):
-    phone = serializers.CharField(max_length=11, min_length=11)
-
-    def validate_phone(self, value):
-        # 简单的手机号格式验证
-        if not re.match(r'^1[3-9]\d{9}$', value):
-            raise serializers.ValidationError('手机号格式不正确')
-        return value
