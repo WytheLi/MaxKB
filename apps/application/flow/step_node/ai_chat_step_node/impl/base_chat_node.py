@@ -271,12 +271,15 @@ class BaseChatNode(IChatNode):
 
         mcp_servers_config = {}
 
+        # 迁移过来mcp_source是None
+        if mcp_source is None:
+            mcp_source = 'custom'
         if mcp_enable:
             if mcp_source == 'custom' and mcp_servers is not None and '"stdio"' not in mcp_servers:
                 mcp_servers_config = json.loads(mcp_servers)
             elif mcp_tool_id:
                 mcp_tool = QuerySet(Tool).filter(id=mcp_tool_id).first()
-                if mcp_tool:
+                if mcp_tool and mcp_tool.is_active:
                     mcp_servers_config = json.loads(mcp_tool.code)
 
         if tool_enable:
@@ -285,6 +288,8 @@ class BaseChatNode(IChatNode):
                 self.context['execute_ids'] = []
                 for tool_id in tool_ids:
                     tool = QuerySet(Tool).filter(id=tool_id).first()
+                    if not tool.is_active:
+                        continue
                     executor = ToolExecutor(CONFIG.get('SANDBOX'))
                     if tool.init_params is not None:
                         params = json.loads(rsa_long_decrypt(tool.init_params))
